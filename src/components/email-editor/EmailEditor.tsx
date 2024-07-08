@@ -1,6 +1,6 @@
 import { Bold, Eraser, Italic, Underline } from "lucide-react";
 import styles from "./EmailEditor.module.scss";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { applyStyle, Tstyle } from "./apply-style";
 import parse from 'html-react-parser'
 
@@ -21,14 +21,38 @@ export function EmailEditor() {
     setSelectionEnd(textRef.current?.selectionEnd);
   }
 
-  const applyFormat = (type: Tstyle) =>{
+  const applyFormat = useCallback((type: Tstyle) =>{
     if (!textRef.current) return
     const textBefore = text.substring(0,selectionStart);
     const textAfter = text.substring(selectionEnd);
     const selectedText = text.substring(selectionStart,selectionEnd);
     if (!selectedText) return
     setText(textBefore + applyStyle(type, selectedText) + textAfter);
-  }
+  }, [text, selectionStart, selectionEnd]);
+
+  useEffect(()=>{
+    const handleKeyPress = (event: KeyboardEvent) =>{
+      const {ctrlKey, key} = event;
+      if (ctrlKey){
+        switch (key.toLowerCase()){
+          case 'b':
+            applyFormat('bold')
+            break
+          case 'i':
+            applyFormat('italic')
+            break
+          case 'y':
+            applyFormat('underline')
+            break
+        }
+      }}
+    window.addEventListener('keydown',handleKeyPress)
+
+    return ()=>{
+      window.removeEventListener('keydown',handleKeyPress)
+    };
+  },[applyFormat])
+
   return (
     <div>
       <h1>Email editor</h1>
