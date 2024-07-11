@@ -1,34 +1,23 @@
 import { Bold, Eraser, Italic, Underline } from "lucide-react";
 import styles from "./EmailEditor.module.scss";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { applyStyle, Tstyle } from "./apply-style";
 import parse from 'html-react-parser'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { emailService } from "../../services/email.service";
+import { useEditor } from "./useEditor";
+import { useEffect } from "react";
 
 export function EmailEditor() {
-  const [text,setText] = useState(`Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Repellendus autem quod excepturi recusandae velit dolorem,
-            minus, consectetur voluptatibus incidunt adipisci laboriosam
-            et, rerum fuga dolor culpa maiores at. Eveniet, dolorem!`)
+  const {applyFormat, text, updateSelection, setText, textRef} = useEditor()
 
-  const [selectionStart, setSelectionStart] = useState(0);
-  const [selectionEnd, setSelectionEnd] = useState(0);
-  
-  const textRef = useRef<HTMLTextAreaElement | null>(null)
-  
-  const updateSelection = () =>{
-    if(!textRef.current) return;
-    setSelectionStart(textRef.current?.selectionStart);
-    setSelectionEnd(textRef.current?.selectionEnd);
-  }
-
-  const applyFormat = useCallback((type: Tstyle) =>{
-    if (!textRef.current) return
-    const textBefore = text.substring(0,selectionStart);
-    const textAfter = text.substring(selectionEnd);
-    const selectedText = text.substring(selectionStart,selectionEnd);
-    if (!selectedText) return
-    setText(textBefore + applyStyle(type, selectedText) + textAfter);
-  }, [text, selectionStart, selectionEnd]);
+  const queryClient = useQueryClient()
+  const {mutate, isPending} = useMutation({
+    mutationKey: ['create email'],
+    mutationFn: () => emailService.sendEmail(text),
+    onSuccess(){
+      setText('')
+      queryClient.refetchQueries({queryKey: ["email list"]})
+    } 
+  })
 
   useEffect(()=>{
     const handleKeyPress = (event: KeyboardEvent) =>{
@@ -56,7 +45,8 @@ export function EmailEditor() {
   return (
     <div>
       <h1>Email editor</h1>
-      <div className={styles.preview}>{parse(text)}</div>
+      {text && 
+      <div className={styles.preview}>{parse(text)}</div>}
       <div className={styles.card}>
         
           <textarea className={styles.editor}
@@ -74,7 +64,7 @@ export function EmailEditor() {
             <button onClick={()=>applyFormat('underline')}><Underline size={17}/></button>
 
             </div>
-            <button>Send message</button>
+            <button disabled={isPending} onClick={()=>mutate()} >Send message</button>
           </div>
       </div>
     </div>

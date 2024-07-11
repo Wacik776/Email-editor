@@ -1,0 +1,20 @@
+{
+  "emails": [
+    {
+      "text": "a title",
+      "id": "cd48"
+    },
+    {
+      "id": "c4fb",
+      "text": "Lorem ipsum dolor, sit amet consectetur adipisicing elit.\n            Repellendus autem quod excepturi recusandae velit dolorem,\n            minus, consectetur voluptatibus incidunt adipisci laboriosam\n            et, rerum fuga dolor culpa maiores at. Eveniet, dolorem!"
+    },
+    {
+      "id": "9010",
+      "text": "asdasdlksnblnwllneflnandasdas"
+    },
+    {
+      "id": "7118",
+      "text": "Lorem ipsum dolor, sit amet consectetur adipisicing elit.\n            Re<u>pellendus autem quod excepturi recusandae velit </u>dolorem,\n            minus, consectetur voluptatibus incidunt adipi<b>sci laboriosam\n            et, rerum fuga dolor culpa maiores at. Eveniet, dolorem!</b>"
+    }
+  ]
+}
