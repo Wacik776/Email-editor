@@ -1,5 +1,12 @@
 # Email-editor
-React + Ts 
+React + Ts + ReactQuery
+
+
+![image](https://github.com/Wacik776/Email-editor/assets/103214257/24a4f231-b66b-44c1-90d5-b35f3f2dae29)
+
+
+![image](https://github.com/Wacik776/Email-editor/assets/103214257/29721eed-1e6b-4edc-8de7-5a64c16f8201)
+
 
 # React + TypeScript + Vite
 
